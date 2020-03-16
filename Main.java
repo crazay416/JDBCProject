@@ -60,7 +60,7 @@ public class CECS323JavaTermProject {
             
             String choice;
             do {
-                System.out.println("\nChoices:\n1.Insert\n2.Delete\n3.Exit");
+                System.out.println("\nChoices:\n1.Insert\n2.Delete\n3.Display\n4.Exit");
                 choice = in.nextLine();
                 if (choice.equals("1")){
                     // My STEP: Insert Values to the table
@@ -89,23 +89,23 @@ public class CECS323JavaTermProject {
                     pstmt.executeUpdate();
                 }
                 else if(choice.equals("2")){
-                    try{
                     stmt2 = conn.createStatement();
                     System.out.println("Enter the name of the Group to remove: ");
                     String removeGroup = in.nextLine();
                     String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
-                    ResultSet rs2 = stmt.executeQuery(sql3);
-                    System.out.println(rs2.next());
+                    //ResultSet rs2 = stmt2.executeQuery(sql3);
+                    //System.out.println(rs2.next());
                     pstmt = conn.prepareStatement(sql3);
                     pstmt.setString(1, removeGroup);
                     pstmt.executeUpdate();
-                    }
-                    catch(NullPointerException e){
-                        System.out.println("That Does Not Exist");
-                    }
+                }
+                else if(choice.equals("3")){
+                    String sql3 = "SELECT GROUPNAME FROM WRITINGGROUP";
+                    pstmt = conn.prepareStatement(sql3);
+                    
                 }
                 
-            }while((!(choice.equals("3"))));
+            }while((!(choice.equals("4"))));
             
             
             
@@ -133,6 +133,7 @@ public class CECS323JavaTermProject {
                 System.out.printf(displayFormat, 
                         dispNull(getGroupName), dispNull(getHeadWriter), dispNull(getYearFormed), dispNull(getSubject));
             }
+            
             //STEP 6: Clean-up environment
             rs.close();
             stmt.close();
