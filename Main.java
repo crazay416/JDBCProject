@@ -47,7 +47,11 @@ public class CECS323JavaTermProject {
         Connection conn = null; //initialize the connection
         Statement stmt = null;  //initialize the statement that we're using
         PreparedStatement pstmt = null;
-        Statement stmt2 = null;
+        String sql4;
+        ResultSet rs2;
+        
+        
+        
         try {
             //STEP 2: Register JDBC driver
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -87,9 +91,9 @@ public class CECS323JavaTermProject {
                     pstmt.setString(4, subject);
 
                     pstmt.executeUpdate();
+                    pstmt.close();
                 }
                 else if(choice.equals("2")){
-                    stmt2 = conn.createStatement();
                     System.out.println("Enter the name of the Group to remove: ");
                     String removeGroup = in.nextLine();
                     String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
@@ -98,14 +102,32 @@ public class CECS323JavaTermProject {
                     pstmt = conn.prepareStatement(sql3);
                     pstmt.setString(1, removeGroup);
                     pstmt.executeUpdate();
+                    pstmt.close();
+                    
                 }
                 else if(choice.equals("3")){
-                    String sql3 = "SELECT GROUPNAME FROM WRITINGGROUP";
-                    pstmt = conn.prepareStatement(sql3);
-                    
+                    String choice1;
+                    do{
+                        System.out.println("\n1.List Writing Groups\n2.List Publiushers"
+                        + "\n3.List Book Titles\n4.Exit");
+                        choice1 = in.nextLine();
+                        if(choice1.equals("1")){
+                            sql4 = "SELECT GROUPNAME FROM WRITINGGROUP";
+                            pstmt = conn.prepareStatement(sql4);
+                            rs2 = pstmt.executeQuery();
+                            System.out.println("GroupName");
+                            while(rs2.next()){
+                                String getTheName = rs2.getString("GROUPNAME");
+                                System.out.println(dispNull(getTheName));
+                            }
+                            rs2.close();
+                            }
+     
+                    }while(!(choice1.equals("4")));
                 }
                 
             }while((!(choice.equals("4"))));
+            
             
             
             
