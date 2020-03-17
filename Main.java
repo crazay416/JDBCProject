@@ -167,7 +167,7 @@ public class CECS323JavaTermProject {
                     String removeGroup = in.nextLine();
                     String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
                     //ResultSet rs2 = stmt2.executeQuery(sql3);
-                    //System.out.println(rs2.next());
+                    //System.out.pridntln(rs2.next());
                     pstmt = conn.prepareStatement(sql3);
                     pstmt.setString(1, removeGroup);
                     pstmt.executeUpdate();
@@ -178,7 +178,7 @@ public class CECS323JavaTermProject {
                     String choice1;
                     do{
                         System.out.println("\n1.List Writing Groups\n2.List Publiushers"
-                        + "\n3.List Information about a Book\n4.Exit");
+                        + "\n3.List Book Titles\n4.List Information about a Book\n5.Exit");
                         choice1 = in.nextLine();
                         if(choice1.equals("1")){
                             sql4 = "SELECT GROUPNAME FROM WRITINGGROUP";
@@ -207,18 +207,53 @@ public class CECS323JavaTermProject {
                         }
                         
                         else if(choice1.equals("3")){
-                            
+                            sql4 = "SELECT BOOKTITLE FROM BOOKS";
+                            pstmt = conn.prepareStatement(sql4);
+                            rs2 = pstmt.executeQuery();
+                            System.out.println("Book Titles: ");
+                            while(rs2.next()){
+                                String getBookTitle = rs2.getString("BOOKTITLE");
+                                System.out.println(dispNull(getBookTitle));
+                            }
+                            rs2.close();
+                            pstmt.close();
+                        }
+                        
+                        else if(choice1.equals("4")){
+                            System.out.print("Enter the name of the book you would like to find: ");
+                            String getThatBook = in.nextLine();
+                            System.out.print("Enter the name of the group you would like to find: ");
+                            String getThatGroupName = in.nextLine();
+                            sql4 = "SELECT BOOKTITLE, WRITINGGROUPNAME, BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES FROM BOOKS WHERE BOOKTITLE = ? AND WRITINGGROUPNAME = ?";                            
+                            pstmt = conn.prepareStatement(sql4);
+                            pstmt.setString(1, getThatBook);
+                            pstmt.setString(2, getThatGroupName);
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                String getGroupName = rs2.getString("WRITINGGROUPNAME");
+                                String getBookTitle = rs2.getString("BOOKTITLE");
+                                String getPublisherName = rs2.getString("BOOKPUBLISHERNAME");
+                                String getYearPublished = rs2.getString("YEARPUBLISHED");
+                                String getNumberPages = rs2.getString("NUMBERPAGES");
+                                System.out.print(dispNull(getGroupName) + ", ");
+                                System.out.print(dispNull(getBookTitle) + ", ");
+                                System.out.print(dispNull(getPublisherName) + ", ");
+                                System.out.print(dispNull(getYearPublished) + ", ");
+                                System.out.print(dispNull(getNumberPages) + " ");
+                            }
+                            rs2.close();
+                            pstmt.close();
                         
                         }
      
-                    }while(!(choice1.equals("4")));
+                    }while(!(choice1.equals("5")));
                 }
                 
             }while((!(choice.equals("4"))));
             
             
             
-            
+            /*
             //STEP 4: Execute a query
             System.out.println("Creating statement...");
             stmt = conn.createStatement();
@@ -248,6 +283,7 @@ public class CECS323JavaTermProject {
             rs.close();
             stmt.close();
             conn.close();
+            */
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
@@ -273,5 +309,3 @@ public class CECS323JavaTermProject {
         System.out.println("Goodbye!");
     }//end main
 }//end FirstExample}
-
-
