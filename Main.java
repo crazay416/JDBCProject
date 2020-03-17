@@ -48,6 +48,7 @@ public class CECS323JavaTermProject {
         Statement stmt = null;  //initialize the statement that we're using
         PreparedStatement pstmt = null;
         String sql4;
+        String sql2;
         ResultSet rs2;
         
         
@@ -67,31 +68,99 @@ public class CECS323JavaTermProject {
                 System.out.println("\nChoices:\n1.Insert\n2.Delete\n3.Display\n4.Exit");
                 choice = in.nextLine();
                 if (choice.equals("1")){
-                    // My STEP: Insert Values to the table
-                    System.out.print("\nEnter your groupName: ");
-                    String groupName = in.nextLine();
+                    String choice0;
+                    do{
+                        System.out.println("\n1.WritingGroup\n2.Publishers\n3.Books\n4.Exit");
+                        choice0 = in.nextLine();
+                        if (choice0.equals("1")){
+                            // My STEP: Insert Values to the table
+                            System.out.print("\nEnter your groupName: ");
+                            String groupName = in.nextLine();
 
-                    System.out.println("\nEnter the HeadWriter: ");
-                    String headWriter = in.nextLine();
+                            System.out.println("\nEnter the HeadWriter: ");
+                            String headWriter = in.nextLine();
 
-                    System.out.println("\nEnter the YearFormed: ");
-                    String yearFormed = in.nextLine();
+                            System.out.println("\nEnter the YearFormed: ");
+                            String yearFormed = in.nextLine();
 
-                    System.out.println("\nEnter the Subject: ");
-                    String subject = in.nextLine();
-                    String sql2;
-                    sql2 = "INSERT INTO WRITINGGROUP " + "(GROUPNAME, HEADWRITER, "
-                            + "YEARFORMED, SUBJECT)" + " values (?, ?, ?, ?)";
+                            System.out.println("\nEnter the Subject: ");
+                            String subject = in.nextLine();
+                            sql2 = "INSERT INTO WRITINGGROUP " + "(GROUPNAME, HEADWRITER, "
+                                    + "YEARFORMED, SUBJECT)" + " values (?, ?, ?, ?)";
 
-                    pstmt = conn.prepareStatement(sql2);
+                            pstmt = conn.prepareStatement(sql2);
 
-                    pstmt.setString(1, groupName);
-                    pstmt.setString(2, headWriter);
-                    pstmt.setString(3, yearFormed);
-                    pstmt.setString(4, subject);
+                            pstmt.setString(1, groupName);
+                            pstmt.setString(2, headWriter);
+                            pstmt.setString(3, yearFormed);
+                            pstmt.setString(4, subject);
 
-                    pstmt.executeUpdate();
-                    pstmt.close();
+                            pstmt.executeUpdate();
+                            pstmt.close();
+                        }
+                        
+                        else if(choice0.equals("2")){
+                            System.out.print("Enter the PublisherName: ");
+                            String publisherName = in.nextLine();
+                            
+                            System.out.print("Enter the Publisher Address: ");
+                            String publisherAddress = in.nextLine();
+                            
+                            System.out.print("Enter the publisher Phone number: ");
+                            String phoneNumber = in.nextLine();
+                            
+                            System.out.print("Enther the email of the publisher: ");
+                            String publisherEmail = in.nextLine();
+                            
+                            sql2 = "INSERT INTO PUBLISHERS " + "(PUBLISHERNAME, PUBLISHERADDRESS, "
+                                    + "PUBLISHERPHONE, PUBLISHEREMAIL)" + " values (?, ?, ?, ?)";
+                            
+                            pstmt = conn.prepareStatement(sql2);
+
+                            pstmt.setString(1, publisherName);
+                            pstmt.setString(2, publisherAddress);
+                            pstmt.setString(3, phoneNumber);
+                            pstmt.setString(4, publisherEmail);
+
+                            pstmt.executeUpdate();
+                            pstmt.close();
+                        }
+                        
+                        else if(choice0.equals("3")){
+                            System.out.print("Enter the GroupName: ");
+                            String writingGroupName = in.nextLine();
+                            
+                            System.out.print("Enter the book title:");
+                            String bookTitle = in.nextLine();
+                            
+                            System.out.print("Enter Publisher Name: ");
+                            String bookPublisherName = in.nextLine();
+                            
+                            System.out.print("Enter the year the book was published: ");
+                            String yearPublished = in.nextLine();
+                            
+                            System.out.print("Enter the numbewr of pages: ");
+                            String numberPages = in.nextLine();
+                            
+                            sql2 = "INSERT INTO BOOKS " + "(WRITINGGROUPNAME, BOOKTITLE, "
+                                    + "BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
+                            
+                            pstmt = conn.prepareStatement(sql2);
+
+                            pstmt.setString(1, writingGroupName);
+                            pstmt.setString(2, bookTitle);
+                            pstmt.setString(3, bookPublisherName);
+                            pstmt.setString(4, yearPublished);
+                            pstmt.setString(5, numberPages);
+                            
+                            pstmt.executeUpdate();
+                            pstmt.close();
+                            
+                        }
+                        
+                        
+                    }while(!(choice0.equals("4")));
+                    
                 }
                 else if(choice.equals("2")){
                     System.out.println("Enter the name of the Group to remove: ");
@@ -109,7 +178,7 @@ public class CECS323JavaTermProject {
                     String choice1;
                     do{
                         System.out.println("\n1.List Writing Groups\n2.List Publiushers"
-                        + "\n3.List Book Titles\n4.Exit");
+                        + "\n3.List Information about a Book\n4.Exit");
                         choice1 = in.nextLine();
                         if(choice1.equals("1")){
                             sql4 = "SELECT GROUPNAME FROM WRITINGGROUP";
@@ -121,7 +190,26 @@ public class CECS323JavaTermProject {
                                 System.out.println(dispNull(getTheName));
                             }
                             rs2.close();
+                            pstmt.close();
                             }
+                        
+                        else if(choice1.equals("2")){
+                            sql4 = "SELECT PUBLISHERNAME FROM PUBLISHERS";
+                            pstmt = conn.prepareStatement(sql4);
+                            rs2 = pstmt.executeQuery();
+                            System.out.println("Publisher Names");
+                            while(rs2.next()){
+                                String getThePublisher = rs2.getString("PUBLISHERNAME");
+                                System.out.println(dispNull(getThePublisher));
+                            }
+                            rs2.close();
+                            pstmt.close();
+                        }
+                        
+                        else if(choice1.equals("3")){
+                            
+                        
+                        }
      
                     }while(!(choice1.equals("4")));
                 }
