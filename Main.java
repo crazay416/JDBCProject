@@ -70,7 +70,7 @@ public class CECS323JavaTermProject {
                 if (choice.equals("1")){
                     String choice0;
                     do{
-                        System.out.println("\n1.WritingGroup\n2.Publishers\n3.Books\n4.Exit");
+                        System.out.println("Which would you like to insert:\n1.WritingGroup\n2.Publishers\n3.Books\n4.Exit");
                         choice0 = in.nextLine();
                         if (choice0.equals("1")){
                             // My STEP: Insert Values to the table
@@ -177,8 +177,11 @@ public class CECS323JavaTermProject {
                 else if(choice.equals("3")){
                     String choice1;
                     do{
-                        System.out.println("\n1.List Writing Groups\n2.List Publiushers"
-                        + "\n3.List Book Titles\n4.List Information about a Book\n5.Exit");
+                        System.out.println("Which would like to list:\n1.List Writing Groups\n2.List Publishers"
+                        + "\n3.List Book Titles\n4.List Information about a book"
+                                + "\n5.List Information about a publisher"
+                                + "\n6.List Information about a WritingGroup"
+                                + "\n7.Exit");
                         choice1 = in.nextLine();
                         if(choice1.equals("1")){
                             sql4 = "SELECT GROUPNAME FROM WRITINGGROUP";
@@ -243,10 +246,29 @@ public class CECS323JavaTermProject {
                             }
                             rs2.close();
                             pstmt.close();
-                        
+                        }
+                        else if(choice1.equals("5")){
+                            System.out.print("Enter the name of the publisher you would like to find: ");
+                            String getThatPublisher = in.nextLine();
+                            sql4 = "SELECT PUBLISHERNAME, PUBLISHERADDRESS, PUBLISHERPHONE, PUBLISHEREMAIL FROM PUBLISHERS WHERE PUBLISHERNAME = ?";                        
+                            pstmt = conn.prepareStatement(sql4);
+                            pstmt.setString(1, getThatPublisher);
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                String getPublisherName = rs2.getString("PUBLISHERNAME");
+                                String getPublisherAddress = rs2.getString("PUBLISHERADDRESS");
+                                String getPhone = rs2.getString("PUBLISHERPHONE");
+                                String getPublisherEmail = rs2.getString("PUBLISHEREMAIL");
+                                System.out.print(dispNull(getPublisherName) + ", ");
+                                System.out.print(dispNull(getPublisherAddress) + ", ");
+                                System.out.print(dispNull(getPhone) + ", ");
+                                System.out.print(dispNull(getPublisherEmail) + ", ");
+                            }
+                            rs2.close();
+                            pstmt.close();
                         }
      
-                    }while(!(choice1.equals("5")));
+                    }while(!(choice1.equals("7")));
                 }
                 
             }while((!(choice.equals("4"))));
