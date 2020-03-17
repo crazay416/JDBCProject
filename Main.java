@@ -267,6 +267,26 @@ public class CECS323JavaTermProject {
                             rs2.close();
                             pstmt.close();
                         }
+                        else if(choice1.equals("6")){
+                            System.out.print("Enter the name of the WritingGroup you would like to find: ");
+                            String getThatGroup = in.nextLine();
+                            sql4 = "SELECT GROUPNAME, HEADWRITER, YEARFORMED, SUBJECT FROM WRITINGGROUP WHERE GROUPNAME = ?";                        
+                            pstmt = conn.prepareStatement(sql4);
+                            pstmt.setString(1, getThatGroup);
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                String getGroupName = rs2.getString("GROUPNAME");
+                                String getWriter = rs2.getString("HEADWRITER");
+                                String getYear = rs2.getString("YEARFORMED");
+                                String getSubject = rs2.getString("SUBJECT");
+                                System.out.print(dispNull(getGroupName) + ", ");
+                                System.out.print(dispNull(getWriter) + ", ");
+                                System.out.print(dispNull(getYear) + ", ");
+                                System.out.print(dispNull(getSubject) + ", ");
+                            }
+                            rs2.close();
+                            pstmt.close();
+                        }
      
                     }while(!(choice1.equals("7")));
                 }
