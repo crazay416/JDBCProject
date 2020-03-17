@@ -57,9 +57,11 @@ public class CECS323JavaTermProject {
             conn = DriverManager.getConnection(DB_URL);
             
             
-            System.out.println("\nChoices:\n1.Insert\n2.Delete\n3.Exit");
-            String choice = in.nextLine();
-            while (!(choice.equals("3"))){
+            
+            String choice;
+            do {
+                System.out.println("\nChoices:\n1.Insert\n2.Delete\n3.Display\n4.Exit");
+                choice = in.nextLine();
                 if (choice.equals("1")){
                     // My STEP: Insert Values to the table
                     System.out.print("\nEnter your groupName: ");
@@ -87,54 +89,23 @@ public class CECS323JavaTermProject {
                     pstmt.executeUpdate();
                 }
                 else if(choice.equals("2")){
+                    stmt2 = conn.createStatement();
+                    System.out.println("Enter the name of the Group to remove: ");
                     String removeGroup = in.nextLine();
                     String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
+                    //ResultSet rs2 = stmt2.executeQuery(sql3);
+                    //System.out.println(rs2.next());
                     pstmt = conn.prepareStatement(sql3);
                     pstmt.setString(1, removeGroup);
                     pstmt.executeUpdate();
                 }
-            }
-            
-            /*
-            // My STEP: Insert Values to the table
-            System.out.print("\nEnter your groupName: ");
-            String groupName = in.nextLine();
-            
-            System.out.println("\nEnter the HeadWriter: ");
-            String headWriter = in.nextLine();
-            
-            System.out.println("\nEnter the YearFormed: ");
-            String yearFormed = in.nextLine();
-            
-            System.out.println("\nEnter the Subject: ");
-            String subject = in.nextLine();
-            String sql2;
-            sql2 = "INSERT INTO WRITINGGROUP " + "(GROUPNAME, HEADWRITER, "
-                    + "YEARFORMED, SUBJECT)" + " values (?, ?, ?, ?)";
-            
-            pstmt = conn.prepareStatement(sql2);
-            
-            pstmt.setString(1, groupName);
-            pstmt.setString(2, headWriter);
-            pstmt.setString(3, yearFormed);
-            pstmt.setString(4, subject);
-            
-            pstmt.executeUpdate();
-            */
-            
-            /*
-            String q;
-            System.out.println("Would you like to remove a Group?");
-            q = in.nextLine();
-            
-            if (q.equals("yes")){
-                String removeGroup = in.nextLine();
-                String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
-                pstmt = conn.prepareStatement(sql3);
-                pstmt.setString(1, removeGroup);
-                pstmt.executeUpdate();
-            }
-            */
+                else if(choice.equals("3")){
+                    String sql3 = "SELECT GROUPNAME FROM WRITINGGROUP";
+                    pstmt = conn.prepareStatement(sql3);
+                    
+                }
+                
+            }while((!(choice.equals("4"))));
             
             
             
@@ -146,6 +117,7 @@ public class CECS323JavaTermProject {
             sql = "SELECT * FROM WRITINGGROUP";
             //sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
             ResultSet rs = stmt.executeQuery(sql);
+            System.out.println(rs.next());
             
 
             //STEP 5: Extract data from result set
@@ -161,6 +133,7 @@ public class CECS323JavaTermProject {
                 System.out.printf(displayFormat, 
                         dispNull(getGroupName), dispNull(getHeadWriter), dispNull(getYearFormed), dispNull(getSubject));
             }
+            
             //STEP 6: Clean-up environment
             rs.close();
             stmt.close();
