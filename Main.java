@@ -85,18 +85,33 @@ public class CECS323JavaTermProject {
 
                             System.out.println("\nEnter the Subject: ");
                             String subject = in.nextLine();
-                            sql2 = "INSERT INTO WRITINGGROUP " + "(GROUPNAME, HEADWRITER, "
+                            
+                            boolean state =  true;
+                            sql2 = "SELECT COUNT(*) FROM WRITINGGROUP WHERE GROUPNAME = ?";
+                            pstmt = conn.prepareStatement(sql2);
+                            pstmt.setString(1, groupName);
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                System.out.println(rs2.getInt(1));
+                                if (rs2.getInt(1) == 1){
+                                    System.out.println("Writing Group Exists."
+                                            + "Please try again");
+                                }
+                                else{
+                                    sql2 = "INSERT INTO WRITINGGROUP " + "(GROUPNAME, HEADWRITER, "
                                     + "YEARFORMED, SUBJECT)" + " values (?, ?, ?, ?)";
 
-                            pstmt = conn.prepareStatement(sql2);
+                                    pstmt = conn.prepareStatement(sql2);
 
-                            pstmt.setString(1, groupName);
-                            pstmt.setString(2, headWriter);
-                            pstmt.setString(3, yearFormed);
-                            pstmt.setString(4, subject);
+                                    pstmt.setString(1, groupName);
+                                    pstmt.setString(2, headWriter);
+                                    pstmt.setString(3, yearFormed);
+                                    pstmt.setString(4, subject);
 
-                            pstmt.executeUpdate();
-                            pstmt.close();
+                                    pstmt.executeUpdate();
+                                    pstmt.close();
+                                }
+                            }
                         }
                         
                         else if(choice0.equals("2")){
@@ -112,6 +127,9 @@ public class CECS323JavaTermProject {
                             System.out.print("Enther the email of the publisher: ");
                             String publisherEmail = in.nextLine();
                             
+                            System.out.println("Enter old Publisher Name");
+                            String oldPublisher = in.nextLine();
+                            
                             sql2 = "INSERT INTO PUBLISHERS " + "(PUBLISHERNAME, PUBLISHERADDRESS, "
                                     + "PUBLISHERPHONE, PUBLISHEREMAIL)" + " values (?, ?, ?, ?)";
                             
@@ -122,6 +140,14 @@ public class CECS323JavaTermProject {
                             pstmt.setString(3, phoneNumber);
                             pstmt.setString(4, publisherEmail);
 
+                            pstmt.executeUpdate();
+                            pstmt.close();
+                            
+                            sql4 = "UPDATE BOOKS SET BOOKPUBLISHERNAME = ? WHERE BOOKPUBLISHERNAME = ?";
+                            pstmt = conn.prepareStatement(sql4);
+                            pstmt.setString(1, publisherName);
+                            pstmt.setString(2, oldPublisher);
+                            
                             pstmt.executeUpdate();
                             pstmt.close();
                         }
@@ -139,8 +165,9 @@ public class CECS323JavaTermProject {
                             System.out.print("Enter the year the book was published: ");
                             String yearPublished = in.nextLine();
                             
-                            System.out.print("Enter the numbewr of pages: ");
+                            System.out.print("Enter the number of pages: ");
                             String numberPages = in.nextLine();
+                            
                             
                             sql2 = "INSERT INTO BOOKS " + "(WRITINGGROUPNAME, BOOKTITLE, "
                                     + "BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
@@ -157,20 +184,23 @@ public class CECS323JavaTermProject {
                             pstmt.close();
                             
                         }
-                        
-                        
                     }while(!(choice0.equals("4")));
                     
                 }
                 else if(choice.equals("2")){
                     System.out.println("Enter the name of the Group to remove: ");
                     String removeGroup = in.nextLine();
-                    String sql3 = "DELETE FROM WRITINGGROUP WHERE GROUPNAME = ?";
-                    //ResultSet rs2 = stmt2.executeQuery(sql3);
-                    //System.out.pridntln(rs2.next());
-                    pstmt = conn.prepareStatement(sql3);
+                    String test = "SELECT COUNT(*) FROM WRITINGGROUP WHERE GROUPNAME = ?";
+                    pstmt = conn.prepareStatement(test);
                     pstmt.setString(1, removeGroup);
-                    pstmt.executeUpdate();
+                    rs2 = pstmt.executeQuery();
+                    while(rs2.next()){
+                        System.out.println(rs2.getInt(1));
+                        if (rs2.getInt(1) != 1){
+                            System.out.println(removeGroup + " does not exist "
+                                    + "Please try again");
+                        }
+                    }
                     pstmt.close();
                     
                 }
