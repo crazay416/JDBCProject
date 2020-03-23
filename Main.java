@@ -50,6 +50,7 @@ public class CECS323JavaTermProject {
         String sql4;
         String sql2;
         ResultSet rs2;
+        ResultSet rs3;
         
         
         
@@ -86,7 +87,6 @@ public class CECS323JavaTermProject {
                             System.out.println("\nEnter the Subject: ");
                             String subject = in.nextLine();
                             
-                            boolean state =  true;
                             sql2 = "SELECT COUNT(*) FROM WRITINGGROUP WHERE GROUPNAME = ?";
                             pstmt = conn.prepareStatement(sql2);
                             pstmt.setString(1, groupName);
@@ -127,29 +127,53 @@ public class CECS323JavaTermProject {
                             System.out.print("Enther the email of the publisher: ");
                             String publisherEmail = in.nextLine();
                             
-                            System.out.println("Enter old Publisher Name");
+                            System.out.println("Enter old Publisher Name: ");
                             String oldPublisher = in.nextLine();
                             
-                            sql2 = "INSERT INTO PUBLISHERS " + "(PUBLISHERNAME, PUBLISHERADDRESS, "
-                                    + "PUBLISHERPHONE, PUBLISHEREMAIL)" + " values (?, ?, ?, ?)";
-                            
-                            pstmt = conn.prepareStatement(sql2);
-
-                            pstmt.setString(1, publisherName);
-                            pstmt.setString(2, publisherAddress);
-                            pstmt.setString(3, phoneNumber);
-                            pstmt.setString(4, publisherEmail);
-
-                            pstmt.executeUpdate();
-                            pstmt.close();
-                            
-                            sql4 = "UPDATE BOOKS SET BOOKPUBLISHERNAME = ? WHERE BOOKPUBLISHERNAME = ?";
+                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE BOOKPUBLISHERNAME = ?";
                             pstmt = conn.prepareStatement(sql4);
-                            pstmt.setString(1, publisherName);
-                            pstmt.setString(2, oldPublisher);
+                            pstmt.setString(1, oldPublisher);
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                if(rs2.getInt(1) == 0){
+                                    System.out.println("Old Publisher has not created any books");
+                                }
+                                else{
+                                    sql2 = "SELECT COUNT(*) FROM PUBLISHERS WHERE PUBLISHERNAME = ?";
+                                    pstmt = conn.prepareStatement(sql2);
+                                    pstmt.setString(1, publisherName);
+                                    rs3 = pstmt.executeQuery();
+                                    while(rs3.next()){
+                                        if (rs3.getInt(1) == 1){
+                                        System.out.println("Publisher name already exists please try again");
+                                        }
+                                        else{
+                                            sql2 = "INSERT INTO PUBLISHERS " + "(PUBLISHERNAME, PUBLISHERADDRESS, "
+                                            + "PUBLISHERPHONE, PUBLISHEREMAIL)" + " values (?, ?, ?, ?)";
                             
-                            pstmt.executeUpdate();
-                            pstmt.close();
+                                            pstmt = conn.prepareStatement(sql2);
+
+                                            pstmt.setString(1, publisherName);
+                                            pstmt.setString(2, publisherAddress);
+                                            pstmt.setString(3, phoneNumber);
+                                            pstmt.setString(4, publisherEmail);
+
+                                            pstmt.executeUpdate();
+                                            pstmt.close();
+
+                                            sql4 = "UPDATE BOOKS SET BOOKPUBLISHERNAME = ? WHERE BOOKPUBLISHERNAME = ?";
+                                            pstmt = conn.prepareStatement(sql4);
+                                            pstmt.setString(1, publisherName);
+                                            pstmt.setString(2, oldPublisher);
+
+                                            pstmt.executeUpdate();
+                                            pstmt.close();
+                                            //rs3.close();
+                                            //rs2.close();
+                                        }
+                                    }    
+                                }
+                            }
                         }
                         
                         else if(choice0.equals("3")){
@@ -168,37 +192,80 @@ public class CECS323JavaTermProject {
                             System.out.print("Enter the number of pages: ");
                             String numberPages = in.nextLine();
                             
-                            
-                            sql2 = "INSERT INTO BOOKS " + "(WRITINGGROUPNAME, BOOKTITLE, "
-                                    + "BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
-                            
-                            pstmt = conn.prepareStatement(sql2);
-
+                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
+                            pstmt = conn.prepareCall(sql4);
                             pstmt.setString(1, writingGroupName);
                             pstmt.setString(2, bookTitle);
-                            pstmt.setString(3, bookPublisherName);
-                            pstmt.setString(4, yearPublished);
-                            pstmt.setString(5, numberPages);
-                            
-                            pstmt.executeUpdate();
-                            pstmt.close();
-                            
+                            rs2 = pstmt.executeQuery();
+                            while(rs2.next()){
+                                if(rs2.getInt(1) == 1){
+                                    System.out.println("The Writing Group Already created this book. Please try again.");
+                                }
+                                else{
+                                    
+                                    sql4 = "SELECT COUNT(*) FROM WRITINGGROUP WHERE GROUPNAME = ?";
+                                    pstmt = conn.prepareStatement(sql4);
+                                    pstmt.setString(1, writingGroupName);
+                                    rs2 = pstmt.executeQuery();
+                                    while(rs2.next()){
+                                        if(rs2.getInt(1) != 1){
+                                            System.out.println("WritingGroup does not exist");
+                                        }
+                                        else{
+                                            sql2 = "SELECT COUNT(*) FROM PUBLISHERS WHERE PUBLISHERNAME = ?";
+                                            pstmt = conn.prepareStatement(sql2);
+                                            pstmt.setString(1, bookPublisherName);
+                                            rs3 = pstmt.executeQuery();
+                                            while(rs3.next()){
+                                                if(rs3.getInt(1) != 1){
+                                                    System.out.println("Publisher does not exist");
+                                                }
+                                                else{
+                                                    sql2 = "INSERT INTO BOOKS " + "(WRITINGGROUPNAME, BOOKTITLE, "
+                                                    + "BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
+
+                                                    pstmt = conn.prepareStatement(sql2);
+
+                                                    pstmt.setString(1, writingGroupName);
+                                                    pstmt.setString(2, bookTitle);
+                                                    pstmt.setString(3, bookPublisherName);
+                                                    pstmt.setString(4, yearPublished);
+                                                    pstmt.setString(5, numberPages);
+
+                                                    pstmt.executeUpdate();
+                                                    pstmt.close();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }while(!(choice0.equals("4")));
                     
                 }
                 else if(choice.equals("2")){
-                    System.out.println("Enter the name of the Group to remove: ");
-                    String removeGroup = in.nextLine();
-                    String test = "SELECT COUNT(*) FROM WRITINGGROUP WHERE GROUPNAME = ?";
+                    System.out.println("Enter the name of the Book to remove: ");
+                    String removeBook = in.nextLine();
+                    System.out.println("Enter the name of the WritingGroup: ");
+                    String nameGroup = in.nextLine();
+                    String test = "SELECT COUNT(*) FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
                     pstmt = conn.prepareStatement(test);
-                    pstmt.setString(1, removeGroup);
+                    pstmt.setString(1, nameGroup);
+                    pstmt.setString(2, removeBook);
                     rs2 = pstmt.executeQuery();
                     while(rs2.next()){
                         System.out.println(rs2.getInt(1));
                         if (rs2.getInt(1) != 1){
-                            System.out.println(removeGroup + " does not exist "
+                            System.out.println(removeBook + " does not exist "
                                     + "Please try again");
+                        }
+                        else{
+                            sql4 = "DELETE FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
+                            pstmt = conn.prepareStatement(sql4);
+                            pstmt.setString(1, nameGroup);
+                            pstmt.setString(2, removeBook);
+                            pstmt.executeUpdate();
                         }
                     }
                     pstmt.close();
@@ -323,39 +390,6 @@ public class CECS323JavaTermProject {
                 
             }while((!(choice.equals("4"))));
             
-            
-            
-            /*
-            //STEP 4: Execute a query
-            System.out.println("Creating statement...");
-            stmt = conn.createStatement();
-            String sql;
-            
-            sql = "SELECT * FROM WRITINGGROUP";
-            //sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-            ResultSet rs = stmt.executeQuery(sql);
-            System.out.println(rs.next());
-            
-
-            //STEP 5: Extract data from result set
-            System.out.printf(displayFormat, "ID", "First Name", "Last Name", "Phone #");
-            while (rs.next()) {
-                //Retrieve by column name
-                String getGroupName = rs.getString("GROUPNAME");
-                String getHeadWriter = rs.getString("HEADWRITER");
-                String getYearFormed = rs.getString("YEARFORMED");
-                String getSubject = rs.getString("SUBJECT");
-
-                //Display values
-                System.out.printf(displayFormat, 
-                        dispNull(getGroupName), dispNull(getHeadWriter), dispNull(getYearFormed), dispNull(getSubject));
-            }
-            
-            //STEP 6: Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-            */
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
