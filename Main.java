@@ -130,7 +130,7 @@ public class CECS323JavaTermProject {
                             System.out.println("Enter old Publisher Name: ");
                             String oldPublisher = in.nextLine();
                             
-                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE BOOKPUBLISHERNAME = ?";
+                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE PUBLISHERNAME = ?";
                             pstmt = conn.prepareStatement(sql4);
                             pstmt.setString(1, oldPublisher);
                             rs2 = pstmt.executeQuery();
@@ -161,7 +161,7 @@ public class CECS323JavaTermProject {
                                             pstmt.executeUpdate();
                                             pstmt.close();
 
-                                            sql4 = "UPDATE BOOKS SET BOOKPUBLISHERNAME = ? WHERE BOOKPUBLISHERNAME = ?";
+                                            sql4 = "UPDATE BOOKS SET PUBLISHERNAME = ? WHERE PUBLISHERNAME = ?";
                                             pstmt = conn.prepareStatement(sql4);
                                             pstmt.setString(1, publisherName);
                                             pstmt.setString(2, oldPublisher);
@@ -192,7 +192,7 @@ public class CECS323JavaTermProject {
                             System.out.print("Enter the number of pages: ");
                             String numberPages = in.nextLine();
                             
-                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
+                            sql4 = "SELECT COUNT(*) FROM BOOKS WHERE GROUPNAME = ? AND BOOKTITLE = ?";
                             pstmt = conn.prepareCall(sql4);
                             pstmt.setString(1, writingGroupName);
                             pstmt.setString(2, bookTitle);
@@ -221,8 +221,8 @@ public class CECS323JavaTermProject {
                                                     System.out.println("Publisher does not exist");
                                                 }
                                                 else{
-                                                    sql2 = "INSERT INTO BOOKS " + "(WRITINGGROUPNAME, BOOKTITLE, "
-                                                    + "BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
+                                                    sql2 = "INSERT INTO BOOKS " + "(GROUPNAME, BOOKTITLE, "
+                                                    + "PUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES)" + " values (?, ?, ?, ?, ?)";
 
                                                     pstmt = conn.prepareStatement(sql2);
 
@@ -249,7 +249,7 @@ public class CECS323JavaTermProject {
                     String removeBook = in.nextLine();
                     System.out.println("Enter the name of the WritingGroup: ");
                     String nameGroup = in.nextLine();
-                    String test = "SELECT COUNT(*) FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
+                    String test = "SELECT COUNT(*) FROM BOOKS WHERE GROUPNAME = ? AND BOOKTITLE = ?";
                     pstmt = conn.prepareStatement(test);
                     pstmt.setString(1, nameGroup);
                     pstmt.setString(2, removeBook);
@@ -261,7 +261,7 @@ public class CECS323JavaTermProject {
                                     + "Please try again");
                         }
                         else{
-                            sql4 = "DELETE FROM BOOKS WHERE WRITINGGROUPNAME = ? AND BOOKTITLE = ?";
+                            sql4 = "DELETE FROM BOOKS WHERE GROUPNAME = ? AND BOOKTITLE = ?";
                             pstmt = conn.prepareStatement(sql4);
                             pstmt.setString(1, nameGroup);
                             pstmt.setString(2, removeBook);
@@ -324,15 +324,15 @@ public class CECS323JavaTermProject {
                             String getThatBook = in.nextLine();
                             System.out.print("Enter the name of the group you would like to find: ");
                             String getThatGroupName = in.nextLine();
-                            sql4 = "SELECT BOOKTITLE, WRITINGGROUPNAME, BOOKPUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES FROM BOOKS WHERE BOOKTITLE = ? AND WRITINGGROUPNAME = ?";                            
+                            sql4 = "SELECT BOOKTITLE,GROUPNAME, PUBLISHERNAME, YEARPUBLISHED, NUMBERPAGES FROM BOOKS WHERE BOOKTITLE = ? AND GROUPNAME = ?";                            
                             pstmt = conn.prepareStatement(sql4);
                             pstmt.setString(1, getThatBook);
                             pstmt.setString(2, getThatGroupName);
                             rs2 = pstmt.executeQuery();
                             while(rs2.next()){
-                                String getGroupName = rs2.getString("WRITINGGROUPNAME");
+                                String getGroupName = rs2.getString("GROUPNAME");
                                 String getBookTitle = rs2.getString("BOOKTITLE");
-                                String getPublisherName = rs2.getString("BOOKPUBLISHERNAME");
+                                String getPublisherName = rs2.getString("PUBLISHERNAME");
                                 String getYearPublished = rs2.getString("YEARPUBLISHED");
                                 String getNumberPages = rs2.getString("NUMBERPAGES");
                                 System.out.print(dispNull(getGroupName) + ", ");
