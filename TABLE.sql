@@ -1,35 +1,46 @@
-# WritingGroup holds the GroupName, Headwriter, YeardFormed, and Subject
+-- “WritingGroups” table holds the GroupName, Headwriter, YeardFormed, and Subject
 CREATE TABLE WritingGroup(
-    GroupName VARCHAR(255) NOT NULL,
-    HeadWriter VARCHAR(255)NOT NULL,
-    YearFormed INT NOT NULL,
-    Subject VARCHAR(255) NOT NULL,
+-- Unique name of each writing group
+    GroupName VARCHAR(50) NOT NULL,
+-- Name of the group’s head writer
+    HeadWriter VARCHAR(50) NOT NULL,
+-- Year when the group was formed	
+    YearFormed INT NOT NULL,	
+-- Subject’s name of the group		
+    Subject VARCHAR(50) NOT NULL,		
     
-    CONSTRAINT writinggroups_pk PRIMARY KEY (GroupName));
+    CONSTRAINT writingGroups_pk PRIMARY KEY (GroupName));
 
-# Publishers holds the Publisher's name, address, phone number and email
+-- “Publishers” table holds the PublisherName, PublisherAddress, PublisherPhone and PublisherEmail
 CREATE TABLE Publishers(
-    PublisherName VARCHAR(255) NOT NULL,
-    PublisherAddress VARCHAR(255) NOT NULL,
-    PublisherPhone VARCHAR(255) NOT NULL,
-    PublisherEmail VARCHAR(255) NOT NULL,
+-- Unique name of the publisher
+    PublisherName VARCHAR(50) NOT NULL,
+-- Address of the publisher
+    PublisherAddress VARCHAR(50) NOT NULL,
+-- Phone number of the publisher
+    PublisherPhone VARCHAR(13) NOT NULL,
+-- Email address of the publisher
+    PublisherEmail VARCHAR(50) NOT NULL,
     
     CONSTRAINT publishers_pk PRIMARY KEY (PublisherName));
-# Books hold the writing group name, book title, the publisher, year that it
-# was published and the number of pages in that book
+
+-- “Books” table holds the GroupName, BookTitle, PublisherName, YearPublished, and NumberPages
 CREATE TABLE Books(
-    WritingGroupName VARCHAR(255) NOT NULL,
-    BookTitle VARCHAR(255) NOT NULL,
-    BookPublisherName VARCHAR(255) NOT NULL,
+-- Name of the writing group
+    GroupName VARCHAR(50) NOT NULL,
+-- Unique title of the book
+    BookTitle VARCHAR(50) NOT NULL,
+-- Name of the publisher
+    PublisherName VARCHAR(50) NOT NULL,
+-- Year when the book was published
     YearPublished INT NOT NULL,
+-- Total pages of the book
     NumberPages INT NOT NULL,
     
-    CONSTRAINT writinggroups_01 FOREIGN KEY (WritingGroupName)
+    CONSTRAINT books_writingGroup_01 FOREIGN KEY (GroupName)
     REFERENCES WritingGroup (GroupName),
-
-    CONSTRAINT publishers_01 FOREIGN KEY (BookPublisherName)
+    CONSTRAINT books_publishers_01 FOREIGN KEY (PublisherName)
     REFERENCES Publishers (PublisherName),
 
-    CONSTRAINT books_pk PRIMARY KEY (WritingGroupName, BookTitle),
-
-    CONSTRAINT books_01 UNIQUE (BookTitle, BookPublisherName));
+    CONSTRAINT books_pk PRIMARY KEY (GroupName, BookTitle),
+    CONSTRAINT books_uk_01 UNIQUE (BookTitle, PublisherName));
